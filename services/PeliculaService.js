@@ -1,43 +1,43 @@
-import { User, Role } from "../models/index.js";
+import { Pelicula, Genero } from "../models/index.js";
 import { genToken, verifyToken } from "../utils/token.js";
 
-class UserService {
-  getAllUsersService = async () => {
+class PeliculaService {
+  getAllPeliculasService = async () => {
     try {
-      const data = await User.findAll({
+      const data = await Pelicula.findAll({
         attributes: ["name"],
-        include: Role,
+        include: Genero,
       });
       return data;
     } catch (error) {
       throw error;
     }
   };
-  getUserByIdService = (id) => {
-    return "get user by id service";
+  getPeliculaByIdService = (id) => {
+    return "get peli by id service";
   };
-  createUserService = async (userData) => {
+  createPeliculaService = async (peliData) => {
     try {
-      const data = await User.create(userData);
+      const data = await Pelicula.create(peliData);
       return data;
     } catch (error) {
       throw error;
     }
   };
-  updateUserService = (id) => {
-    return "update user service";
+  updatePeliculaService = (id) => {
+    return "update peli service";
   };
-  deleteUserService = (id) => {
-    return "delete user service";
+  deletePeliculaService = (id) => {
+    return "delete peli service";
   };
-  loginUserService = async (user) => {
+  loginPeliculaService = async (peli) => {
     try {
-      const { pass, mail } = user;
-      const data = await User.findOne({ where: { mail } });
-      if (!data) throw new Error("User not found");
+      const { pass, mail } = peli;
+      const data = await Pelicula.findOne({ where: { mail } });
+      if (!data) throw new Error("Pelicula not found");
 
       const comparePass = await data.compare(pass);
-      if (!comparePass) throw new Error("User not found");
+      if (!comparePass) throw new Error("Pelicula not found");
 
       const payload = {
         id: data.id,
@@ -45,7 +45,7 @@ class UserService {
       };
 
       const token = genToken(payload);
-      // console.log(`🚀 ~ UserService ~ loginUserService= ~ token:`, token)
+      // console.log(`🚀 ~ PeliculaService ~ loginPeliculaService= ~ token:`, token)
 
       return token;
     } catch (error) {
@@ -63,4 +63,4 @@ class UserService {
   };
 }
 
-export default UserService;
+export default PeliculaService;
