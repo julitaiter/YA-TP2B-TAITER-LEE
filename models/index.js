@@ -15,4 +15,4 @@ User.hasMany(Alquiler)
 Alquiler.belongsTo(Pelicula)
 Alquiler.belongsTo(User)
 
-export { Pelicula, Genero, User, Alquiler };
+export { Pelicula, Genero, User, Alquiler, Role };

@@ -1,54 +1,71 @@
 import { Pelicula, Genero } from "../models/index.js";
-import { genToken, verifyToken } from "../utils/token.js";
+import { verifyToken } from "../utils/token.js";
 
 class PeliculaService {
   getAllPeliculasService = async () => {
     try {
       const data = await Pelicula.findAll({
-        attributes: ["name"],
-        include: Genero,
+        attributes: ["id", "titulo", "duracion", "sinopsis", "director", "estreno", "precio"],
+        include: {
+          model: Genero,
+          attributes: ["id", "nombre"],
+        },
       });
       return data;
     } catch (error) {
+      console.error("Error en getAllPeliculasService:", error);
       throw error;
     }
   };
-  getPeliculaByIdService = (id) => {
-    return "get peli by id service";
+
+  getPeliculaByIdService = async (id) => {
+    try {
+      const data = await Pelicula.findByPk(id, {
+        attributes: ["id", "titulo", "duracion", "sinopsis", "director", "estreno", "precio"],
+        include: {
+          model: Genero,
+          attributes: ["id", "nombre"],
+        },
+      });
+      if (!data) throw new Error("Película no encontrada");
+      return data;
+    } catch (error) {
+      console.error("Error en getPeliculaByIdService:", error);
+      throw error;
+    }
   };
+
   createPeliculaService = async (peliData) => {
     try {
       const data = await Pelicula.create(peliData);
       return data;
     } catch (error) {
+      console.error("Error en createPeliculaService:", error);
       throw error;
     }
   };
-  updatePeliculaService = (id) => {
-    return "update peli service";
-  };
-  deletePeliculaService = (id) => {
-    return "delete peli service";
-  };
-  loginPeliculaService = async (peli) => {
+
+  updatePeliculaService = async (id, peliData) => {
     try {
-      const { pass, mail } = peli;
-      const data = await Pelicula.findOne({ where: { mail } });
-      if (!data) throw new Error("Pelicula not found");
-
-      const comparePass = await data.compare(pass);
-      if (!comparePass) throw new Error("Pelicula not found");
-
-      const payload = {
-        id: data.id,
-        mail: data.mail,
-      };
-
-      const token = genToken(payload);
-      // console.log(`🚀 ~ PeliculaService ~ loginPeliculaService= ~ token:`, token)
-
-      return token;
+      const pelicula = await Pelicula.findByPk(id);
+      if (!pelicula) throw new Error("Película no encontrada");
+      const updatedPelicula = await pelicula.update(peliData);
+      return updatedPelicula;
     } catch (error) {
+      console.error("Error en updatePeliculaService:", error);
+      throw error;
+    }
+  };
+
+  deletePeliculaService = async (id) => {
+    try {
+      const deletedRows = await Pelicula.destroy({
+        where: { id },
+      });
+      if (!deletedRows) throw new Error("Película no encontrada");
+      return { message: "Película eliminada con éxito" };
+    } catch (error) {
+      console.error("Error en deletePeliculaService:", error);
       throw error;
     }
   };
@@ -58,6 +75,7 @@ class PeliculaService {
       const verify = verifyToken(token);
       return verify.data;
     } catch (error) {
+      console.error("Error en me:", error);
       throw error;
     }
   };

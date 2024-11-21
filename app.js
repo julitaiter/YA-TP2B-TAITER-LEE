@@ -3,6 +3,7 @@ import routes from "./routes/routes.js";
 import connection from "./connection/connection.js";
 import { SERVER_PORT } from "./config/config.js";
 import roleSeed from "./seed/roleSeed.js";
+import generoSeed from "./seed/generoSeed.js";
 import cookieParser from "cookie-parser";
 
 const app = express();
@@ -21,9 +22,10 @@ app.use((req, res, next) => {
 });
 
 
-await connection.sync({ force: false});
+await connection.sync({ force: false });
 
 await roleSeed()
+await generoSeed()
 
 app.listen(SERVER_PORT, () => {
   console.log(`🚀 ~ app.listen ~ localhost:${SERVER_PORT}`);
