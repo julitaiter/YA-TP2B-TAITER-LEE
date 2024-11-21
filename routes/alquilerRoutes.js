@@ -1,5 +1,5 @@
 import express from "express";
-import AlquilerController from "../controllers/AlquilerController.js";
+import AlquilerController from "../controllers/AlquilerControllers.js";
 
 const alquilerRouter = express.Router();
 const alquilerController = new AlquilerController();

@@ -1,5 +1,5 @@
 import express from "express";
-import GeneroController from "../controllers/GeneroController.js";
+import GeneroController from "../controllers/GeneroControllers.js";
 
 const generoRouter = express.Router();
 const generoController = new GeneroController();
